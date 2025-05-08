@@ -19,24 +19,24 @@ public class CRUD_UTS_23090002_C_2025 {
 
     public static void main(String[] args) {
         // Buka koneksi ke MongoDB
-        MongoClient mongoClient = MongoClients.create("mongodb+srv://dbAdmin:4AMWWK9J5Qs2LSLN@uts-23090002-c-2025.vlgqpd9.mongodb.net/?retryWrites=true&w=majority&appName=uts-23090002-C-2025");
+        MongoClient mc = MongoClients.create("mongodb+srv://dbAdmin:4AMWWK9J5Qs2LSLN@uts-23090002-c-2025.vlgqpd9.mongodb.net/?retryWrites=true&w=majority&appName=uts-23090002-C-2025");
 
         // Pilih database dan collection
-        MongoDatabase database = mongoClient.getDatabase("uts_23090002_C_2025");
-        MongoCollection<Document> collection = database.getCollection("coll_23090002_C_2025");
+        MongoDatabase db = mc.getDatabase("uts_23090002_C_2025");
+        MongoCollection<Document> coll = db.getCollection("coll_23090002_C_2025");
 
         // Kosongkan collection
-        collection.drop();
+        coll.drop();
 
         // CREATE
-        Document doc1 = new Document("name", "buah")
+        Document d1 = new Document("name", "buah")
                 .append("items", Arrays.asList("apel", "pisang", "jeruk"));
-        Document doc2 = new Document("name", "mobil")
+        Document d2 = new Document("name", "mobil")
                 .append("items", Arrays.asList(
                         Arrays.asList("Toyota", "Honda"),
                         Arrays.asList("Ford", "Chevrolet")
                 ));
-        Document doc3 = new Document("name", "warna")
+        Document d3 = new Document("name", "warna")
                 .append("items", Arrays.asList(
                         Arrays.asList(
                                 Arrays.asList("merah", "biru"),
@@ -47,36 +47,36 @@ public class CRUD_UTS_23090002_C_2025 {
                                 Arrays.asList("coklat", "abu-abu")
                         )
                 ));
-        collection.insertMany(Arrays.asList(doc1, doc2, doc3));
+        coll.insertMany(Arrays.asList(d1, d2, d3));
 
         // READ
         System.out.println("\nList Document (read):");
-        for (Document doc : collection.find()) {
-            System.out.println(doc.toJson());
+        for (Document d : coll.find()) {
+            System.out.println(d.toJson());
         }
 
         // UPDATE
-        collection.updateOne(eq("name", "buah"),
+        coll.updateOne(eq("name", "buah"),
                 new Document("$set", new Document("items", Arrays.asList("durian", "mangga", "anggur"))));
         System.out.println("\nList document (update):");
-        for (Document doc : collection.find()) {
-            System.out.println(doc.toJson());
+        for (Document d : coll.find()) {
+            System.out.println(d.toJson());
         }
 
         // DELETE
-        collection.deleteOne(eq("name", "mobil"));
+        coll.deleteOne(eq("name", "mobil"));
         System.out.println("\nList document (delete):");
-        for (Document doc : collection.find()) {
-            System.out.println(doc.toJson());
+        for (Document d : coll.find()) {
+            System.out.println(d.toJson());
         }
 
         // SEARCH
         System.out.println("\nCari kuning (search):");
-        for (Document doc : collection.find(eq("items", "kuning"))) {
-            System.out.println(doc.toJson());
+        for (Document d : coll.find(eq("items", "kuning"))) {
+            System.out.println(d.toJson());
         }
 
         // Tutup koneksi
-        mongoClient.close();
+        mc.close();
     }
 }
